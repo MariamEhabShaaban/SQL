@@ -4,7 +4,9 @@ select * from Employee
 --2
 select Fname,Lname,Address,Salary,Dno from Employee 
 --3
-select Pname,Plocation,Dnum from Project
+select Pname,Plocation,Dname
+from Project p , Departments D
+where P.Dnum = D.Dnum
 --4
 select Fname+' '+Lname as [Full Name],(Salary *12)*0.1 as [ANNUAL COMM] from  Employee 
 --5
