@@ -2,10 +2,10 @@ use AdventureWorks2012
 
 --1
 
-/*select sd.SalesOrderID,sh.ShipDate
+select sd.SalesOrderID,sh.ShipDate
 from Sales.salesorderdetail sd , sales.salesorderheader sh
 where sh.OrderDate between '7/28/2002' and '7/29/2014'
-*/
+
 
 --2
 
