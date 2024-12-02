@@ -87,6 +87,8 @@ union
 select cast(GETDATE() as varchar(20))
 union
 select CONVERT(varchar(20),GETDATE())
+union
+select CONVERT(varchar(20),GETDATE(),102)
 
 --bonus
 
