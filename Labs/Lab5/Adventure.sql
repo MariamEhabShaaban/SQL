@@ -64,14 +64,14 @@ where ListPrice between 100 and 120
 order by listprice
 
 --11
-/*select rowguid,Name,SalesPersonID,Demographics into Store_Archive
+select rowguid,Name,SalesPersonID,Demographics into Store_Archive
 from Sales.Store
 
 
 --only structure
 select rowguid,Name,SalesPersonID,Demographics into Store_Archive2
 from Sales.Store
-where 1=2*/
+where 1=2
 
 --12
 select FORMAT(GETDATE(),'dd mm yyyy')
