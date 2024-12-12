@@ -20,96 +20,133 @@ on d.dept_id=s.dept_id
 
 --4
 
-select ins.ins_name ,d.dept_name
-from Instructor ins
-inner join 
-department d
-on d.dept_id=ins.dept_id
+select ins_name,dept_name
+from Instructor i
+left join
+Department d
+on d.Dept_Id=i.Dept_Id
 
 --5
-select concat(s.st_fname,' ',s.st_lname) as[student name],c.crs_name as [course] 
-from student s
+select concat(st_fname,' ',st_lname) as[full name],crs_name
+from Student s
 inner join 
-Stud_Course sc
-on sc.St_Id=s.St_Id and sc.Grade is not null
-inner join Course c
-on c.Crs_Id=sc.Crs_Id
-
---6
-select top_name ,count(c.crs_id) as[number of courses]
-from
-Topic t
+Stud_Course st_c
+on st_c.St_Id=s.St_Id and st_c.Grade is not null
 inner join
 Course c
+on c.Crs_Id=st_c.Crs_Id
+
+--6
+select count(crs_id),top_name
+from Course c
+inner join Topic t
 on t.Top_Id=c.Top_Id
-group by top_name 
+group by Top_Name
 
 --7
-
-select max(salary) as[max sal],
-min(salary) as[min sal]
+select min(salary),max(salary)
 from Instructor
-
 
 --8
-
-select *
+select ins_name
+from Instructor i
+where i.Salary<(
+select avg(Salary)
 from Instructor
-where Salary<(select avg(salary)
-from Instructor)
+)
 
 --9
-select d.dept_name
+select dept_name
 from Department d
-inner join
-Instructor ins
-on ins.Dept_Id=d.Dept_Id
-where ins.Salary=
-(select min(Salary)
-from Instructor)
+inner join 
+Instructor i
+on i.Dept_Id=d.Dept_Id
+where i.Salary=(
+select min(salary)
+from Instructor
+)
 
 --10
-select top(2) salary
-from Instructor
-order by salary desc
-
---another way using ranking functions
-
+  --way1
+select * from
+Instructor i1
+where 2>(
+select count(Salary)
+from Instructor i2
+where i2.Salary>i1.Salary
+) and Salary is not null
+order by Salary desc
+  
+  --way2
+select distinct top(2) salary
+from Instructor i
+order by i.Salary desc
+  
+  --way3
+select  salary 
+from(
+select salary ,ROW_NUMBER() over(order by salary desc)as rn
+from Instructor i
+) as new_table
+where rn<=2
+  
+  --way4
 select salary
-from (select salary, dense_rank() over(order by salary desc)as DR
-from instructor) as sal
-where DR<=2
+from (
+select salary,dense_rank() over(order by salary desc)as dr
+from Instructor 
+) as new_table
+where dr<=2
+
+  --way5
+select salary from (
+select salary ,rank() over(order by salary desc)as r
+from Instructor
+) as new
+where r<=2
 
 --11
-select ins_name,coalesce (salary,0)  --there is no bonus column
-from Instructor
 
+select Ins_name,isnull(salary,0)
+from Instructor
 
 --12
 
 select avg(salary)
 from Instructor
 
+--13
 
---13 self join
-
-select st.st_fname,sup.*
-from Student st,Student sup
-where sup.St_Id=st.St_super
+select s1.st_fname,sup.*
+from Student s1
+inner join 
+student sup
+on sup.St_Id=s1.St_super
 
 --14
-select salary,Dept_Id from(
-select * ,dense_rank() over(partition by dept_id order by salary desc) as DR
-from Instructor) as new_table
-where DR<=2
+
+select salary,Dept_name
+from(
+select * ,DENSE_RANK() over (partition by dept_id order by salary desc)as dr
+from Instructor
+)as new
+inner join
+Department d
+on d.Dept_Id=new.dept_id
 
 
 --15
-select * from( 
-select * ,ROW_NUMBER() over(partition by dept_id order by newid() )as Ran
-from student )
-as ran_st
-where ran=1
+select *
+from (
+select *,row_number() over(partition by dept_id order by newid()) as rn
+from Instructor
+) as new
+where rn=1;
+
+
+
+
+
 
 
 
